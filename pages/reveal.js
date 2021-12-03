@@ -4,6 +4,9 @@ import Image from 'next/image'
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, onValue } from "firebase/database";
+
 export default function Home() {
   return (
     <div>
@@ -31,21 +34,27 @@ function Main(props) {
   const [person, setPerson] = useState('error')
 
   useEffect(() => {
-    let timeout1 = setTimeout(() => { // 1638745200000 - Date.now()
-      if (reveal == 0) {
-        setReveal(reveal + 1)
-      }
-    }, 2000)
-    let timeout2 = setTimeout(() => { // 1638745200500 - Date.now()
-      if (reveal == 1) {
-        setReveal(reveal + 1)
-      }
-    }, 2500)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCOk687TqUsS4aUBG8trlyRXbtz72o-6Dk",
+      authDomain: "secret-santa-8382a.firebaseapp.com",
+      databaseURL: "https://secret-santa-8382a-default-rtdb.firebaseio.com",
+      projectId: "secret-santa-8382a",
+      storageBucket: "secret-santa-8382a.appspot.com",
+      messagingSenderId: "821632536011",
+      appId: "1:821632536011:web:d62b7793c888ad0e34ba4e"
+    };
 
-    return (() => {
-      clearTimeout(timeout1)
-      clearTimeout(timeout2)
-    })
+    const app = initializeApp(firebaseConfig);
+
+    // Get a reference to the database service
+    const db = getDatabase(app);
+
+    const dataRef = ref(db, 'reveal');
+
+    let listener = onValue(dataRef, (snapshot) => {
+      console.log(snapshot.val())
+      setReveal(snapshot.val())
+    });
   }, [reveal])
 
   useEffect(() => {
