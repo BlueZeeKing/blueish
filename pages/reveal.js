@@ -16,10 +16,8 @@ export default function Home() {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 
-      <main className="bg-black h-screen flex flex-col">
-        <div className="flex-grow"></div>
+      <main>
         <Main />
-        <div className="flex-grow"></div>
       </main>
 
       <footer>
@@ -65,7 +63,7 @@ function Main(props) {
       })
   }, [])
 
-  let classes = 'font-bold text-5xl text-gray-300 p-6 transition-all duration-700'
+  let classes = 'font-bold text-2xl md:text-5xl text-gray-300 p-6 transition-all duration-700'
 
   if (reveal == 1) {
     classes = classes + ' opacity-0'
@@ -79,7 +77,7 @@ function Main(props) {
   }
 
   return (
-    <div className="text-center">
+    <div className="text-center absolute transform -translate-x-1/2 -translate-y-1/2 top-[50%] left-[50%] w-[90vw]">
       <h1 className={classes}>{text}</h1>
     </div>
   )
