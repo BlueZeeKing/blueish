@@ -42,20 +42,58 @@ module.exports = (req, res) => {
 
     var base = Airtable.base('appZp0qTRTTjzoGRe');
 
-    base('Table 1').create(
-      Object.keys(final).map((item) => {
-        return {
-          "fields": {
-            "Name": item,
-            "Person": final[item]
+    var recordsToDelete = []
+
+
+    base('Table 1').select().eachPage(function page(records, fetchNextPage) {
+      records.forEach(function (record) {
+        recordsToDelete.push(record.id)
+      });
+      if (recordsToDelete.length > 0) {
+        base('Table 1').destroy(recordsToDelete, function (err, deletedRecords) {
+          if (err) {
+            res.status(500).send(err)
+            return;
           }
-        }
-      })
-    , function (err, records) {
-      if (err) {
-        res.status(500).send(err)
+
+          base('Table 1').create(
+            Object.keys(final).map((item) => {
+              return {
+                "fields": {
+                  "Name": item,
+                  "Person": final[item]
+                }
+              }
+            })
+            , function (err, records) {
+              if (err) {
+                res.status(500).send(err)
+              } else {
+                res.status(200).send('Success!')
+              }
+            });
+        });
       } else {
-        res.status(200).send('Success!')
+        base('Table 1').create(
+          Object.keys(final).map((item) => {
+            return {
+              "fields": {
+                "Name": item,
+                "Person": final[item]
+              }
+            }
+          })
+          , function (err, records) {
+            if (err) {
+              res.status(500).send(err)
+            } else {
+              res.status(200).send('Success!')
+            }
+          });
+      }
+    }, function done(err) {
+      if (err) {
+        res.status(500).send({ err: err })
       }
     });
   } else {
