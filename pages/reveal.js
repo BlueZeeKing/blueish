@@ -53,6 +53,8 @@ function Main(props) {
       console.log(snapshot.val())
       setReveal(snapshot.val())
     });
+
+    return () => listener()
   }, [reveal])
 
   useEffect(() => {
