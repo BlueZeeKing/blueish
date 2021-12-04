@@ -31,7 +31,7 @@ export default function Home() {
 
 function Main(props) {
   const [reveal, setReveal] = useState(0) // 0 is waiting, 1 is disappear, 2 is new text
-  const [person, setPerson] = useState('error')
+  const [person, setPerson] = useState('Loading')
 
   useEffect(() => {
     const firebaseConfig = {
