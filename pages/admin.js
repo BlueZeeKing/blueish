@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue } from "firebase/database";
-import { GoogleAuthProvider, getAuth, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 
 export default function Home() {
   return (
@@ -63,30 +63,30 @@ function Main(props) {
   useEffect(() => {
     const auth = getAuth();
 
-    const user = null
-
-    getRedirectResult(auth)
-      .then((result) => {
-        user = result.user;
-        console.log(user.displayName)
-      }).catch((error) => {
-        console.log(error)
-      });
+    const user = auth.currentUser
 
     if (user == null) {
       const provider = new GoogleAuthProvider();
-      signInWithRedirect(auth, provider);
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          user = result.user;
+          console.log(user.displayName.split(' ')[0])
+          fetch(`/api/getPerson?name=${user.displayName.split(' ')[0]}`)
+            .then(response => response.json())
+            .then(data => {
+              setPerson(data.person)
+            })
+        }).catch((error) => {
+          console.log(error)
+        });
     } else {
-      console.log(user.displayName)
+      console.log(user.displayName.split(' ')[0])
+      fetch(`/api/getPerson?name=${user.displayName.split(' ')[0]}`)
+        .then(response => response.json())
+        .then(data => {
+          setPerson(data.person)
+        })
     }
-  })
-
-  useEffect(() => {
-    fetch(`/api/getPerson?name=${window.localStorage.getItem('name')}`)
-      .then(response => response.json())
-      .then(data => {
-        setPerson(data.person)
-      })
   }, [])
 
   let classes = 'font-bold text-xl md:text-4xl text-gray-300 p-6 transition-all duration-700'
