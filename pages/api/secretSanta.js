@@ -1,8 +1,8 @@
 var Airtable = require('airtable');
 
 module.exports = (req, res) => {
-  const { password } = req.query;
-  if (password == 'areyousure?') {
+  const { uid } = req.query;
+  if (uid == process.env.ADMIN_UID) {
     function shuffleArray(array) {
       for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -52,7 +52,7 @@ module.exports = (req, res) => {
       if (recordsToDelete.length > 0) {
         base('Table 1').destroy(recordsToDelete, function (err, deletedRecords) {
           if (err) {
-            res.status(500).send(err)
+            res.status(500).send(json.stringify({ err: err }))
             return;
           }
 
@@ -67,7 +67,7 @@ module.exports = (req, res) => {
             })
             , function (err, records) {
               if (err) {
-                res.status(500).send(err)
+                res.status(500).send(json.stringify({ err: err }))
               } else {
                 res.status(200).send('Success!')
               }
@@ -85,7 +85,7 @@ module.exports = (req, res) => {
           })
           , function (err, records) {
             if (err) {
-              res.status(500).send(err)
+              res.status(500).send(json.stringify({ err: err }))
             } else {
               res.status(200).send('Success!')
             }
@@ -93,7 +93,7 @@ module.exports = (req, res) => {
       }
     }, function done(err) {
       if (err) {
-        res.status(500).send({ err: err })
+        res.status(500).send(json.stringify({ err: err }))
       }
     });
   } else {
