@@ -1,8 +1,8 @@
 import Head from 'next/head'
-import Image from 'next/image'
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/router'
+
+import Footer from '../components/footer'
 
 export default function Home() {
   return (
@@ -10,25 +10,20 @@ export default function Home() {
       <Head>
         <title>Secret Santa</title>
         <meta name="description" content="Secret Santa login page" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
 
       <main>
         <Input />
       </main>
 
-      <footer>
-        <h3 className="text-gray-400 text-center absolute w-screen bottom-0 underline p-6"><a href="github.com/BlueZeeKing24">BlueZeeKing24</a></h3>
-      </footer>
+      <Footer />
     </div>
   )
 }
 
 function Input(props) {
   const [value, changeValue] = useState('')
-  const router = useRouter()
-
-  //router.prefetch('/reveal')
 
   function changeHandler(e) {
     changeValue(e.target.value)
