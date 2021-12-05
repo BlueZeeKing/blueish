@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Blueish</title>
-        <meta name="description" content="Blueish.dev home page" />
+        <title>Secret Santa</title>
+        <meta name="description" content="Secret Santa admin page" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 

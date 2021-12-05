@@ -5,14 +5,14 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, onValue } from "firebase/database";
+import { tigetDatabase, ref, onValue } from "firebase/database";
 
 export default function Home() {
   return (
     <div>
       <Head>
-        <title>Blueish</title>
-        <meta name="description" content="Blueish.dev home page" />
+        <title>Secret Santa</title>
+        <meta name="description" content="Secret Santa main page" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 
