@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 
 import React, { useState, useEffect } from 'react';
 
@@ -70,11 +71,15 @@ function Main(props) {
         setUser(user)
 
         console.log(user.displayName.split(' ')[0])
-        fetch(`/api/getPerson?name=${user.displayName.split(' ')[0]}`)
-          .then(response => response.json())
-          .then(data => {
-            setPerson(data.person)
-          })
+        if (window.localStorage.getItem('name') == null || window.localStorage.getItem('name') == undefined) {
+          router.push('/login')
+        } else {
+          fetch(`/api/getPerson?name=${window.localStorage.getItem('name')}`)
+            .then(response => response.json())
+            .then(data => {
+              setPerson(data.person)
+            })
+        }
       }).catch((error) => {
         console.log(error)
       });
@@ -138,6 +143,7 @@ function Main(props) {
       <h1 className={classes}>{text}</h1>
       <button className="m-4 font-bold text-xl md:text-2xl bg-gray-300 bg-opacity-0 focus:bg-opacity-100 text-gray-300 focus:text-black border-gray-500 focus:border-gray-300 hover:border-white border-2 outline-none focus:outline-none p-6 transition-all duration-500 w-60" onClick={handleStart}>Start</button>
       <button className="m-4 font-bold text-xl md:text-2xl bg-gray-300 bg-opacity-0 focus:bg-opacity-100 text-gray-300 focus:text-black border-gray-500 focus:border-gray-300 hover:border-white border-2 outline-none focus:outline-none p-6 transition-all duration-500 w-60" onClick={handleRandomize}>Randomize</button>
+      <h3 className="text-gray-400 text-center underline hover:text-gray-300"><Link href="/login">Return to Login</Link></h3>
     </div>
   )
 }
