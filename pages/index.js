@@ -17,7 +17,7 @@ export default function Home() {
       </main>
 
       <footer>
-        <h3 className="text-gray-400 text-center absolute w-screen bottom-0 underline p-6"><a href="github.com/BlueZeeKing24">BlueZeeKing24</a></h3>
+        <h3 className="text-gray-400 text-center absolute w-screen bottom-0 underline p-6"><a href="https://github.com/BlueZeeKing24">BlueZeeKing24</a></h3>
       </footer>
     </div>
   )
