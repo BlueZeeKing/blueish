@@ -1,0 +1,149 @@
+import Head from 'next/head'
+import Link from 'next/link'
+
+import React, { useState, useEffect } from 'react';
+
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, onValue, set } from "firebase/database";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+
+import Footer from '../components/footer'
+
+export default function Home() {
+  return (
+    <div>
+      <Head>
+        <title>Secret Santa</title>
+        <meta name="description" content="Secret Santa admin page" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+      </Head>
+
+      <main>
+        <Main />
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
+
+function Main(props) {
+  function clickHandler() {
+    console.log('click')
+  }
+
+  const [reveal, setReveal] = useState(0) // 0 is waiting, 1 is disappear, 2 is new text
+  const [person, setPerson] = useState('Loading')
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const firebaseConfig = {
+      apiKey: "AIzaSyCOk687TqUsS4aUBG8trlyRXbtz72o-6Dk",
+      authDomain: "secret-santa-8382a.firebaseapp.com",
+      databaseURL: "https://secret-santa-8382a-default-rtdb.firebaseio.com",
+      projectId: "secret-santa-8382a",
+      storageBucket: "secret-santa-8382a.appspot.com",
+      messagingSenderId: "821632536011",
+      appId: "1:821632536011:web:d62b7793c888ad0e34ba4e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    // Get a reference to the database service
+    const db = getDatabase(app);
+
+    const dataRef = ref(db, 'reveal');
+
+    let listener = onValue(dataRef, (snapshot) => {
+      console.log(snapshot.val())
+      setReveal(snapshot.val())
+    });
+  }, [reveal])
+
+  useEffect(() => {
+    const auth = getAuth();
+
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+
+        setUser(user)
+
+        console.log(user.displayName.split(' ')[0])
+        if (window.localStorage.getItem('name') == null || window.localStorage.getItem('name') == undefined) {
+          router.push('/login')
+        } else {
+          fetch(`/api/getPerson?name=${window.localStorage.getItem('name')}`)
+            .then(response => response.json())
+            .then(data => {
+              setPerson(data.person)
+            })
+        }
+      }).catch((error) => {
+        console.log(error)
+      });
+  }, [])
+
+  let classes = 'font-bold text-xl md:text-4xl text-gray-300 p-6 transition-all duration-700'
+
+  if (reveal == 1) {
+    classes = classes + ' opacity-0'
+  } else {
+    classes = classes + ' opacity-1'
+  }
+
+  let text = 'Awaiting person...'
+  if (reveal == 2) {
+    text = `Your person is ${person}`
+  }
+
+  function handleRandomize() {
+    fetch(`/api/secretSanta`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        body: JSON.stringify({
+          uid: user.uid
+        })
+      },
+    })
+      .then((response) => {
+        console.log(response.ok)
+      })
+  }
+
+  function handleStart() {
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCOk687TqUsS4aUBG8trlyRXbtz72o-6Dk",
+      authDomain: "secret-santa-8382a.firebaseapp.com",
+      databaseURL: "https://secret-santa-8382a-default-rtdb.firebaseio.com",
+      projectId: "secret-santa-8382a",
+      storageBucket: "secret-santa-8382a.appspot.com",
+      messagingSenderId: "821632536011",
+      appId: "1:821632536011:web:d62b7793c888ad0e34ba4e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    // Get a reference to the database service
+    const db = getDatabase(app);
+
+    set(ref(db, 'reveal'), 1);
+
+    setTimeout(() => {
+      set(ref(db, 'reveal'), 2);
+    }, 1500)
+  }
+
+  return (
+    <div className="text-center absolute transform -translate-x-1/2 -translate-y-1/2 top-[50%] left-[50%] w-[90vw]">
+      <h1 className="font-bold text-2xl md:text-5xl text-gray-300 p-6 transition-all duration-700">Admin Page</h1>
+      <h1 className={classes}>{text}</h1>
+      <button className="m-4 font-bold text-xl md:text-2xl bg-gray-300 bg-opacity-0 focus:bg-opacity-100 text-gray-300 focus:text-black border-gray-500 focus:border-gray-300 hover:border-white border-2 outline-none focus:outline-none p-6 transition-all duration-500 w-60" onClick={handleStart}>Start</button>
+      <button className="m-4 font-bold text-xl md:text-2xl bg-gray-300 bg-opacity-0 focus:bg-opacity-100 text-gray-300 focus:text-black border-gray-500 focus:border-gray-300 hover:border-white border-2 outline-none focus:outline-none p-6 transition-all duration-500 w-60" onClick={handleRandomize}>Randomize</button>
+      <h3 className="text-gray-400 text-center underline hover:text-gray-300"><Link href="/login">Return to Login</Link></h3>
+    </div>
+  )
+}
