@@ -1,13 +1,11 @@
 import Head from 'next/head'
-
-import Footer from '../components/footer'
-
+import Image from 'next/image'
 export default function Home() {
   return (
     <div>
       <Head>
-        <title>blueish.dev</title>
-        <meta name="description" content="Secret Santa main page" />
+        <title>Blueish</title>
+        <meta name="description" content="Blueish.dev home page" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 
@@ -17,8 +15,9 @@ export default function Home() {
         <div className="flex-grow"></div>
       </main>
 
-      <Footer />
+      <footer>
+        <h3 className="text-gray-400 text-center absolute w-screen bottom-0 underline p-6"><a href="github.com/BlueZeeKing24">BlueZeeKing24</a></h3>
+      </footer>
     </div>
   )
 }
-
