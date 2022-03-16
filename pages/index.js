@@ -12,12 +12,12 @@ export default function Home() {
 
       <main className="bg-black h-screen flex flex-col">
         <div className="flex-grow"></div>
-        <h1 className="text-gray-200 text-center font-extrabold text-5xl">blueish.dev is currently a WIP</h1>
+        <h1 className="text-gray-200 text-center font-extrabold text-5xl">fjordboard.com is currently a WIP</h1>
         <div className="flex-grow"></div>
       </main>
 
       <footer>
-        <h3 className="text-gray-400 text-center absolute w-screen bottom-0 underline p-6"><a href="https://github.com/BlueZeeKing">BlueZeeKing24</a></h3>
+        <h3 className="text-gray-400 text-center absolute w-screen bottom-0 underline p-6"><a href="mailto:frugivore@fjordboard.com">Frugivore</a></h3>
       </footer>
     </div>
   )
